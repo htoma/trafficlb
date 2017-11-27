@@ -201,3 +201,6 @@ paket-files/
 
 # Publish
 PublishProfiles/
+
+# Configuration
+**/keyvault.json
