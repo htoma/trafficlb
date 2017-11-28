@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace trafficlb
 {
@@ -18,11 +19,16 @@ namespace trafficlb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddMemoryCache();
-            //services.AddDistributedMemoryCache();
-            services.AddDistributedRedisCache(options =>
+            //services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
+
+            services.AddSwaggerGen(options =>
             {
-                options.Configuration = Configuration["redis"];
+                options.SwaggerDoc("trafficlb-v1", new Info
+                {
+                    Title = "Traffic Music Store",
+                    Version = "1.0.0"
+                });
             });
         }
 
@@ -46,6 +52,12 @@ namespace trafficlb
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/trafficlb-v1/swagger.json", "Traffic Music Store");
             });
         }
     }
